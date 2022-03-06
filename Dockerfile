@@ -1,7 +1,5 @@
 FROM node:12-slim
 
-WORKDIR /usr/src/app
-
 ENV ENVIRONMENT=prod
 
 COPY . .
