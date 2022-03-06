@@ -8,3 +8,5 @@ COPY . .
 RUN npm install
 
 CMD [ "npm", "run", "build:prod"]
+CMD [ "npm", "run", "start"]
+
