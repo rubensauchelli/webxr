@@ -8,11 +8,11 @@ const app = express()
 app.use(compression())
 
 // Point static path to dist
-app.use(express.static(path.join(__dirname, 'dist/'), {etag: false, lastModified: false}));
+app.use(express.static(path.join(__dirname, 'dist/webxr/'), {etag: false, lastModified: false}));
 
 //Serve frontend as static
 app.get('*', (req,res) =>{
-    res.sendFile(path.join(__dirname, 'dist/'), {etag: false, lastModified: false});
+    res.sendFile(path.join(__dirname, 'dist/webxr/'), {etag: false, lastModified: false});
 });
 
 app.listen(port, () => console.log('Service server started. Listening on port '+ port));
