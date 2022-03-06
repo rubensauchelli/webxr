@@ -2,6 +2,8 @@ FROM node:12-slim
 
 ENV ENVIRONMENT=prod
 
+WORKDIR /app
+
 COPY . .
 RUN npm install
 
