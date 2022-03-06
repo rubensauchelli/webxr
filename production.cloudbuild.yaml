@@ -1,7 +1,7 @@
 steps:
 # Build the container image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/stefano-lab/production-nft-xr-api', '.']
+  args: ['build', '-t', 'gcr.io/stefano-lab/production-nft-xr-api', '/production.dockerfile']
 
 # Push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
