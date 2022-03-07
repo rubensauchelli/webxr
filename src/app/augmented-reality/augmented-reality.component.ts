@@ -25,11 +25,12 @@ export class AugmentedRealityComponent implements OnInit {
   private loader = new THREE.TextureLoader();
 
 
-  @Input() public texture: string = "/assets/nft.png";
+  @Input() public texture: string = "/assets/nft-2.png";
 
 
 
   constructor() {
+    //Test push change
     const container = document.createElement( 'div' );
     document.body.appendChild( container );
 
