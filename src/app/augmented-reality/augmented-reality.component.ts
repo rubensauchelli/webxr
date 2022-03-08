@@ -109,13 +109,21 @@ export class AugmentedRealityComponent implements OnInit {
     const self = this;
     let controller;
 
+    // function onSelect() {
+    //   const mesh = new THREE.Mesh( this.geometry, this.material );
+    //   mesh.position.set( 0, 0, - 0.3 ).applyMatrix4( controller.matrixWorld );
+    //   mesh.quaternion.setFromRotationMatrix( controller.matrixWorld );
+    //   self.scene.add( mesh );
+    //   self.meshes.push( mesh );
+    //
+    // }
+
     function onSelect() {
-      const mesh = new THREE.Mesh( this.geometry, this.material );
+      const mesh = new THREE.Mesh( new THREE.BoxBufferGeometry( 0.06, 0.06, 0.06 ), new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } ) );
       mesh.position.set( 0, 0, - 0.3 ).applyMatrix4( controller.matrixWorld );
       mesh.quaternion.setFromRotationMatrix( controller.matrixWorld );
       self.scene.add( mesh );
       self.meshes.push( mesh );
-
     }
 
 
