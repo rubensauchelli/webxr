@@ -5,6 +5,7 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import Stats from 'three/examples/jsm/libs/stats.module';
 import {VRButton} from 'three/examples/jsm/webxr/VRButton';
 import {BoxLineGeometry} from 'three/examples/jsm/geometries/BoxLineGeometry';
+import { ARButton } from 'three/examples/jsm/webxr/ARButton';
 
 @Component({
   selector: 'app-augmented-reality',
@@ -23,6 +24,9 @@ export class AugmentedRealityComponent implements OnInit {
   private room;
   private radius: number;
   private loader = new THREE.TextureLoader();
+  private meshes = []
+  private geometry
+  private material
 
 
   @Input() public texture: string = "/assets/nft-2.png";
@@ -30,17 +34,13 @@ export class AugmentedRealityComponent implements OnInit {
 
 
   constructor() {
-    //Test push change
     const container = document.createElement( 'div' );
     document.body.appendChild( container );
-
     this.clock = new THREE.Clock();
 
-    this.camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 100 );
-    this.camera.position.set( 0, 1.6, 3 );
+    this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color( 0x505050 );
 
     this.scene.add( new THREE.HemisphereLight( 0x606060, 0x404040 ) );
 
@@ -48,7 +48,7 @@ export class AugmentedRealityComponent implements OnInit {
     light.position.set( 1, 1, 1 ).normalize();
     this.scene.add( light );
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true } );
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true } );
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize( window.innerWidth, window.innerHeight );
     this.renderer.outputEncoding = THREE.sRGBEncoding;
@@ -56,22 +56,19 @@ export class AugmentedRealityComponent implements OnInit {
     container.appendChild( this.renderer.domElement );
 
     this.controls = new OrbitControls( this.camera, this.renderer.domElement );
-    this.controls.target.set(0, 1.6, 0);
+    this.controls.target.set(0, 3.5, 0);
     this.controls.update();
 
     // @ts-ignore
-    this.stats = new Stats()
-    container.appendChild( this.stats.dom );
+    this.stats = new Stats();
 
     this.initScene();
     this.setupVR();
 
     window.addEventListener('resize', this.resize.bind(this) );
-
-    this.renderer.setAnimationLoop( this.render.bind(this) );
   }
   initScene(){
-    this.radius = 0.08;
+    /*this.radius = 0.08;
 
     this.room = new THREE.LineSegments(
       new BoxLineGeometry( 6, 6, 6, 10, 10, 10 ),
@@ -95,14 +92,38 @@ export class AugmentedRealityComponent implements OnInit {
       object.position.y = 2
       object.position.z = -1
 
-      this.room.add( object );
+      this.room.add( object );*/
 
    // }
+    this.geometry = new THREE.BoxBufferGeometry( 0.06, 0.06, 0.06 );
+    this.material = new THREE.MeshPhongMaterial({ map: this.loader.load(this.texture) });
+    this.meshes = [];
   }
 
   setupVR(){
+   /* this.renderer.xr.enabled = true;*/
+    document.body.appendChild( ARButton.createButton( this.renderer ) );
+
     this.renderer.xr.enabled = true;
-    document.body.appendChild( VRButton.createButton( this.renderer ) );
+
+    const self = this;
+    let controller;
+
+    function onSelect() {
+      const mesh = new THREE.Mesh( this.geometry, this.material );
+      mesh.position.set( 0, 0, - 0.3 ).applyMatrix4( controller.matrixWorld );
+      mesh.quaternion.setFromRotationMatrix( controller.matrixWorld );
+      self.scene.add( mesh );
+      self.meshes.push( mesh );
+
+    }
+
+
+    controller = this.renderer.xr.getController( 0 );
+    controller.addEventListener( 'select', onSelect );
+    this.scene.add( controller );
+
+    this.renderer.setAnimationLoop( this.render.bind(this) );
   }
 
   resize(){
@@ -113,7 +134,7 @@ export class AugmentedRealityComponent implements OnInit {
 
   render( ) {
     this.stats.update();
-
+    this.meshes.forEach( (mesh) => { mesh.rotateY( 0.01 ); });
     this.renderer.render( this.scene, this.camera );
   }
 

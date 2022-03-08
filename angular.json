@@ -120,5 +120,8 @@
       }
     }
   },
-  "defaultProject": "webxr"
+  "defaultProject": "webxr",
+  "cli": {
+    "analytics": "13a5cac8-5af8-47d6-b91c-fed8edcab2ec"
+  }
 }
