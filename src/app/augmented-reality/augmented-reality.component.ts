@@ -29,7 +29,7 @@ export class AugmentedRealityComponent implements OnInit {
   private material
 
 
-  @Input() public texture: string = "/assets/nft-2.png";
+  @Input() public texture: string = "/assets/nft.png";
 
 
 
@@ -119,7 +119,7 @@ export class AugmentedRealityComponent implements OnInit {
     // }
 
     function onSelect() {
-      const mesh = new THREE.Mesh( new THREE.BoxBufferGeometry( 0.06, 0.06, 0.06 ), new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } ) );
+      const mesh = new THREE.Mesh( new THREE.BoxBufferGeometry( 0.06, 0.06, 0.06 ), new THREE.MeshPhongMaterial( { map: (new THREE.TextureLoader()).load("/assets/nft.png") } ) );
       mesh.position.set( 0, 0, - 0.3 ).applyMatrix4( controller.matrixWorld );
       mesh.quaternion.setFromRotationMatrix( controller.matrixWorld );
       self.scene.add( mesh );
